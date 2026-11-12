@@ -37,17 +37,17 @@ jobs:
       - name: Build Windows executable
         if: runner.os == 'Windows'
         run: |
-          pyinstaller --onedir --console --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3;85_steinway_tiles_mp3" melodic_dictation_generator.py
+          pyinstaller --onedir --console --contents-directory "." --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3;85_steinway_tiles_mp3" melodic_dictation_generator.py
 
       - name: Build macOS application
         if: runner.os == 'macOS'
         run: |
-          pyinstaller --onedir --console --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3:85_steinway_tiles_mp3" melodic_dictation_generator.py
+          pyinstaller --onedir --console --contents-directory "." --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3:85_steinway_tiles_mp3" melodic_dictation_generator.py
       
       - name: Build macOS Intel application
         if: runner.os == 'macOS-Intel'
         run: |
-          pyinstaller --onedir --console --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3:85_steinway_tiles_mp3" melodic_dictation_generator.py
+          pyinstaller --onedir --console --contents-directory "." --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3:85_steinway_tiles_mp3" melodic_dictation_generator.py
 
       - name: Upload build
         uses: actions/upload-artifact@v5

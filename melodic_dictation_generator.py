@@ -188,4 +188,10 @@ def main():
     print("\nNote : The number after the note indicates the octave. All alterations are # .");
     return 0;
 
-main();
+run = True;
+while run:
+    main();
+    cont = input("\nRun again ? (y/n)");
+    if cont.lower() != "y":
+        run = False;
+print("\nBye !\n")
