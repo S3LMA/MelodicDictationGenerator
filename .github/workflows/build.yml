@@ -13,6 +13,8 @@ jobs:
         include:
           - os: windows-latest
             name: Windows
+          - os: macos-15-intel
+            name: macOS-Intel
           - os: macos-latest
             name: macOS
 
@@ -20,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.13'
 
@@ -41,9 +43,14 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           pyinstaller --onedir --console --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3:85_steinway_tiles_mp3" melodic_dictation_generator.py
+      
+      - name: Build macOS Intel application
+        if: runner.os == 'macOS-Intel'
+        run: |
+          pyinstaller --onedir --console --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3:85_steinway_tiles_mp3" melodic_dictation_generator.py
 
       - name: Upload build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: MelodicDictationGenerator-${{ matrix.name }}
           path: dist/
