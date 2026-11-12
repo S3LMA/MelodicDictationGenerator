@@ -1,0 +1,9 @@
+# Build files
+dist/
+build/
+
+# Operating system
+.DS_Store
+
+# Python
+venv/

@@ -1,0 +1,49 @@
+
+name: Build MelodicDictationGenerator
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            name: Windows
+          - os: macos-latest
+            name: macOS
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build Windows executable
+        if: runner.os == 'Windows'
+        run: |
+          pyinstaller --onedir --console --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3;85_steinway_tiles_mp3" melodic_dictation_generator.py
+
+      - name: Build macOS application
+        if: runner.os == 'macOS'
+        run: |
+          pyinstaller --onedir --console --name MelodicDictationGenerator --add-data "85_steinway_tiles_mp3:85_steinway_tiles_mp3" melodic_dictation_generator.py
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: MelodicDictationGenerator-${{ matrix.name }}
+          path: dist/
