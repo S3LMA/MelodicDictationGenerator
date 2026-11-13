@@ -21,7 +21,15 @@ REPETITIONS_DEFAULT = 0;
 MAX_INTERVAL_DEFAULT = 14;
 OCT_START_DEFAULT = 3;
 OCT_END_DEFAULT = 4;
-TIMELAPSE_DEFAULT = 0.4;
+TIMELAPSE_DEFAULT = 0.6;
+
+notes_nbr_reg = NOTES_NBR_DEFAULT;
+play_ref_reg = PLAY_REF_DEFAULT;
+repetitions_reg = REPETITIONS_DEFAULT;
+max_interval_reg = MAX_INTERVAL_DEFAULT;
+oct_start_reg = OCT_START_DEFAULT;
+oct_end_reg = OCT_END_DEFAULT;
+timelapse_reg = TIMELAPSE_DEFAULT;
 
 note_name = {
     4: "C1", 5: "C#1", 6: "D1", 7: "D#1",
@@ -55,81 +63,107 @@ note_name = {
     88: "C8"
 }
 
-def main():
-    # Inputs and format checks
-    # Processing inputs
+def main(useRegisteredVariables : bool):
 
-    print("\nWelcome ! Please enter a number of notes, or press ENTER to go with the default ("+str(NOTES_NBR_DEFAULT)+") :");
-    param = input().replace(" ", "");
-    notes_nbr = NOTES_NBR_DEFAULT;
-    while param != "" and not (param.isnumeric() and int(param) > 0) :
-        print("\nThe number of notes indicated must be an integer > 0.");
-        print("Please enter a number of notes, or press ENTER to go with the default ("+str(NOTES_NBR_DEFAULT)+") :");
-        param = input().replace(" ", "");
-    if param != "":
-        notes_nbr = int(param);
-
-    print("\nPlease enter whether you want to hear the reference A before the dictation (type 1 for YES, 0 for NO), or press ENTER to go with the default ("+str(PLAY_REF_DEFAULT)+") :");
-    param = input().replace(" ", "");
-    play_ref = PLAY_REF_DEFAULT;
-    while param != "" and not (param.isnumeric() and 0 <= int(param) <= 1) :
-        print("\nThe reference A option must be either 1 or 0.");
-        print("Please enter whether you want to hear the reference A before the dictation (type 1 for YES, 0 for NO), or press ENTER to go with the default ("+str(PLAY_REF_DEFAULT)+") :");
-        param = input().replace(" ", "");
-    if param != "":
-        play_ref = bool(int(param));
-
-    print("\nPlease enter the number of repetitions, on demand after key pressed (enter 0 for infinity), or press ENTER to go with the default ("+str(REPETITIONS_DEFAULT)+") :");
-    param = input().replace(" ", "");
-    repetitions = REPETITIONS_DEFAULT;
-    while param != "" and not (param.isnumeric() and int(param) >= 0) :
-        print("\nThe number of repetitions must be a positive integer.");
-        print("Please enter the number of times you want to hear the dictation (0 for infinite on demand repetitions), or press ENTER to go with the default ("+str(REPETITIONS_DEFAULT)+") :");
-        param = input().replace(" ", "");
-    if param != "":
-        repetitions = int(param);
-
-    print("\nPlease enter the maximum interval to be played, in number of half-tones (for example a 7m is 10 half-tones), or press ENTER to go with the default (14 (so 9M)) :");
-    param = input().replace(" ", "");
-    max_interval = MAX_INTERVAL_DEFAULT;
-    while param != "" and not (param.isnumeric() and int(param) > 0) :
-        print("\nThe maximum interval (in half-tones) must be an integer > 0.");
-        print("Please enter the maximum interval to be played, in number of half-tones (for example a 7m is 10 half-tones), or press ENTER to go with the default (14 (so 9M)) :");
-        param = input().replace(" ", "");
-    if param != "":
-        max_interval = int(param);
+    if not useRegisteredVariables:
     
-    print("\nPlease enter the lowest octave (between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_START_DEFAULT)+") :");
-    param = input().replace(" ", "");
-    oct_start = OCT_START_DEFAULT;
-    while param != "" and not (param.isnumeric() and MIN_OCTAVE <= int(param) <= MAX_OCTAVE) :
-        print("\nThe lowest possible octave is " + str(MIN_OCTAVE) + ".");
-        print("Please enter the lowest octave (between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_START_DEFAULT)+") :");
+        # Inputs format checks and processing
+
+        print("\nPlease enter a number of notes, or press ENTER to go with the default ("+str(NOTES_NBR_DEFAULT)+") :");
         param = input().replace(" ", "");
-    if param != "":
-        oct_start = int(param);
-    
-    print("\nPlease enter the highest octave (included, between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_END_DEFAULT)+") :");
-    param = input().replace(" ", "");
-    oct_end = OCT_END_DEFAULT;
-    while param != "" and not (param.isnumeric() and oct_start <= int(param) <= MAX_OCTAVE) :
-        print("\nThe highest octave possible is " + str(MAX_OCTAVE) + ". The highest octave chosen must be higher than the lowest one (which is currently "+str(oct_start)+").");
-        print("Please enter the highest octave (included, between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_END_DEFAULT)+") :");
+        notes_nbr = NOTES_NBR_DEFAULT;
+        while param != "" and not (param.isnumeric() and int(param) > 0) :
+            print("\nThe number of notes indicated must be an integer > 0.");
+            print("Please enter a number of notes, or press ENTER to go with the default ("+str(NOTES_NBR_DEFAULT)+") :");
+            param = input().replace(" ", "");
+        if param != "":
+            notes_nbr = int(param);
+
+        print("\nPlease enter whether you want to hear the reference A before the dictation (type 1 for YES, 0 for NO), or press ENTER to go with the default ("+str(PLAY_REF_DEFAULT)+") :");
         param = input().replace(" ", "");
-    if param != "":
-        oct_end = int(param);
-    
-    print("\nPlease enter the time period between 2 notes (in seconds, dot separated decimals accepted), or press ENTER to go with the default ("+str(TIMELAPSE_DEFAULT)+") :");
-    param = input().replace(" ", "");
-    timelapse = TIMELAPSE_DEFAULT;
-    def is_decimal(s):
-        return bool(fullmatch(r"-?\d+(\.\d+)?", s))
-    while param != "" and not (is_decimal(param) and Decimal(param) > 0) :
-        print("\nThe time period between notes must be a decimal > 0.");
-        print("Please enter the time period between 2 notes (in seconds, dot separated decimals accepted), or press ENTER to go with the default ("+str(TIMELAPSE_DEFAULT)+") :");
+        play_ref = PLAY_REF_DEFAULT;
+        while param != "" and not (param.isnumeric() and 0 <= int(param) <= 1) :
+            print("\nThe reference A option must be either 1 or 0.");
+            print("Please enter whether you want to hear the reference A before the dictation (type 1 for YES, 0 for NO), or press ENTER to go with the default ("+str(PLAY_REF_DEFAULT)+") :");
+            param = input().replace(" ", "");
+        if param != "":
+            play_ref = bool(int(param));
+
+        print("\nPlease enter the number of repetitions, on demand after key pressed (enter 0 for infinity), or press ENTER to go with the default ("+str(REPETITIONS_DEFAULT)+") :");
         param = input().replace(" ", "");
-    if param != "":
-        timelapse = Decimal(param);
+        repetitions = REPETITIONS_DEFAULT;
+        while param != "" and not (param.isnumeric() and int(param) >= 0) :
+            print("\nThe number of repetitions must be a positive integer.");
+            print("Please enter the number of times you want to hear the dictation (0 for infinite on demand repetitions), or press ENTER to go with the default ("+str(REPETITIONS_DEFAULT)+") :");
+            param = input().replace(" ", "");
+        if param != "":
+            repetitions = int(param);
+
+        print("\nPlease enter the maximum interval to be played, in number of half-tones (for example a 7m is 10 half-tones), or press ENTER to go with the default (14 (so 9M)) :");
+        param = input().replace(" ", "");
+        max_interval = MAX_INTERVAL_DEFAULT;
+        while param != "" and not (param.isnumeric() and int(param) > 0) :
+            print("\nThe maximum interval (in half-tones) must be an integer > 0.");
+            print("Please enter the maximum interval to be played, in number of half-tones (for example a 7m is 10 half-tones), or press ENTER to go with the default (14 (so 9M)) :");
+            param = input().replace(" ", "");
+        if param != "":
+            max_interval = int(param);
+        
+        print("\nPlease enter the lowest octave (between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_START_DEFAULT)+") :");
+        param = input().replace(" ", "");
+        oct_start = OCT_START_DEFAULT;
+        while param != "" and not (param.isnumeric() and MIN_OCTAVE <= int(param) <= MAX_OCTAVE) :
+            print("\nThe lowest possible octave is " + str(MIN_OCTAVE) + ".");
+            print("Please enter the lowest octave (between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_START_DEFAULT)+") :");
+            param = input().replace(" ", "");
+        if param != "":
+            oct_start = int(param);
+        
+        print("\nPlease enter the highest octave (included, between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_END_DEFAULT)+") :");
+        param = input().replace(" ", "");
+        oct_end = OCT_END_DEFAULT;
+        while param != "" and not (param.isnumeric() and oct_start <= int(param) <= MAX_OCTAVE) :
+            print("\nThe highest octave possible is " + str(MAX_OCTAVE) + ". The highest octave chosen must be higher than the lowest one (which is currently "+str(oct_start)+").");
+            print("Please enter the highest octave (included, between " + str(MIN_OCTAVE) + " and " + str(MAX_OCTAVE) + "), or press ENTER to go with the default ("+str(OCT_END_DEFAULT)+") :");
+            param = input().replace(" ", "");
+        if param != "":
+            oct_end = int(param);
+        
+        print("\nPlease enter the time period between 2 notes (in seconds, dot separated decimals accepted), or press ENTER to go with the default ("+str(TIMELAPSE_DEFAULT)+") :");
+        param = input().replace(" ", "");
+        timelapse = TIMELAPSE_DEFAULT;
+        def is_decimal(s):
+            return bool(fullmatch(r"-?\d+(\.\d+)?", s))
+        while param != "" and not (is_decimal(param) and Decimal(param) > 0) :
+            print("\nThe time period between notes must be a decimal > 0.");
+            print("Please enter the time period between 2 notes (in seconds, dot separated decimals accepted), or press ENTER to go with the default ("+str(TIMELAPSE_DEFAULT)+") :");
+            param = input().replace(" ", "");
+        if param != "":
+            timelapse = Decimal(param);
+        
+        # Updating global variables for next main iteration
+        global notes_nbr_reg;
+        global play_ref_reg;
+        global repetitions_reg;
+        global max_interval_reg;
+        global oct_start_reg;
+        global oct_end_reg;
+        global timelapse_reg;
+        notes_nbr_reg = notes_nbr;
+        play_ref_reg = play_ref;
+        repetitions_reg = repetitions;
+        max_interval_reg = max_interval;
+        oct_start_reg = oct_start;
+        oct_end_reg = oct_end;
+        timelapse_reg = timelapse;
+    else :
+        notes_nbr = notes_nbr_reg;
+        play_ref = play_ref_reg;
+        repetitions = repetitions_reg;
+        max_interval = max_interval_reg;
+        oct_start = oct_start_reg;
+        oct_end = oct_end_reg;
+        timelapse = timelapse_reg;
     
 
     # Generating random note sequence
@@ -189,9 +223,17 @@ def main():
     return 0;
 
 run = True;
+useRegisteredVariables = False;
+print("\nWelcome !");
 while run:
-    main();
+    main(useRegisteredVariables);
     cont = input("\nRun again ? (y/n)");
     if cont.lower() != "y":
         run = False;
+    else:
+        newVars = input("\nWould you like to use the same parameters ? (y/n)")
+        if newVars.lower() == "y":
+            useRegisteredVariables = True;
+        else:
+            useRegisteredVariables = False;
 print("\nBye !\n")
